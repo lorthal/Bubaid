@@ -34,6 +34,11 @@ public class Controller : MonoBehaviour
                     grid.selectedY = Mathf.RoundToInt(b.transform.position.y + grid.tileSize);
                 if (hitInfo.point.y < grid.tileSize / 2)
                     grid.selectedY = Mathf.RoundToInt(b.transform.position.y);
+                if(grid.selectedY > 0)
+                {
+                    grid.selectedX = Mathf.RoundToInt(b.transform.position.x);
+                    grid.selectedZ = Mathf.RoundToInt(b.transform.position.z);
+                }
                 //if (hitInfo.point.x - b.transform.position.x > 0)
                 //    grid.selectedX = Mathf.RoundToInt(b.transform.position.x + grid.tileSize);
                 //if (hitInfo.point.x - b.transform.position.x < 0)
