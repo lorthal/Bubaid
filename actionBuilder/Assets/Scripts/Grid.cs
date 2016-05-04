@@ -2,37 +2,52 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public class Coords
+{
+    public int x, y, z;
+
+    public bool Equals(Coords c)
+    {
+        if (x == c.x &&
+           y == c.y &&
+           z == c.z)
+            return true;
+        else return false;
+
+    }
+}
+
 public class Grid : MonoBehaviour
 {
-    public int sizeX = 100;
-    public int sizeZ = 100;
-    public int sizeY = 2;
-
+    //public int sizeX = 100;
+    //public int sizeZ = 100;
+    //public int sizeY = 2;
+    public Dictionary<Coords, GameObject> board;
     public float tileSize = 1.0f;
 
     public Material pointerMaterial;
     public Material pointerCanNotMaterial;
 
     //public GameObject[,,] board;
-    public GameObject[,] board;
+    //public GameObject[,] board;
     public GameObject[] pointers;
     private GameObject pointer;
     private int selectedBlock = 0;
     public int selectedX;
     public int selectedZ;
-    //public int selectedY;
+    public int selectedY;
 
     void Awake ()
     {
         //board = new GameObject[sizeX,sizeZ,sizeY]; 
-        board = new GameObject[sizeX, sizeZ];
+        board = new Dictionary<Coords, GameObject>();
         SelectPointer();
     }
 	
 	void Update ()
     {
-        //pointer.transform.position = new Vector3(selectedX, selectedY, selectedZ);
-        pointer.transform.position = new Vector3(selectedX, 0, selectedZ);
+        pointer.transform.position = new Vector3(selectedX, selectedY, selectedZ);
+        //pointer.transform.position = new Vector3(selectedX, 0, selectedZ);
         changeBlock();
         RotateBlock();
    	}
@@ -93,14 +108,14 @@ public class Grid : MonoBehaviour
     public bool CanBuild()
     {
         bool build = true;
-        foreach (GameObject o in board)
+        foreach (var o in board.Values)
         {
-
             if (o != null && GetPointer().GetComponent<Collider>().bounds.Contains(o.transform.position))
             {
                 build = false;
             }
         }
+
         Renderer rend = pointer.GetComponent<Renderer>();
         if (!build)
         {
