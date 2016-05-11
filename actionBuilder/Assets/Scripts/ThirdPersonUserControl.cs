@@ -12,9 +12,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private Vector3 m_CamForward;             // The current forward direction of the camera
         private Vector3 m_Move;
         private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
-        [SerializeField] private GameObject cameraPivot;
-
-        public float limit = 60;
+        
         
         private void Start()
         {
@@ -41,40 +39,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
             }
-            if(Input.GetAxis("Mouse X") != 0)
-            {
-                float x = 5 * Input.GetAxis("Mouse X");
-                cameraPivot.transform.Rotate(0, x, 0, Space.World);
-               // m_Character.Move(new Vector3(0, x, 0), Input.GetKey(KeyCode.C), CrossPlatformInputManager.GetButtonDown("Jump"));
-            }
-            if (Input.GetAxis("Mouse Y") != 0)
-            {
-                float y = 5 * -Input.GetAxis("Mouse Y");
-                //cameraPivot.transform.Rotate(y, 0, 0);
-                if (cameraPivot.transform.eulerAngles.x <= 25 && cameraPivot.transform.eulerAngles.x >= 0)
-                {
-                    cameraPivot.transform.Rotate(y, 0, 0);
-                }
-                else if (cameraPivot.transform.eulerAngles.x >= 330 && cameraPivot.transform.eulerAngles.x <= 360)
-                {
-                    cameraPivot.transform.Rotate(y, 0, 0);
-                }
-                Debug.Log(cameraPivot.transform.eulerAngles);
-                //m_Character.transform.Rotate(y, 0, 0);
-
-                if (cameraPivot.transform.eulerAngles.x < 90 && cameraPivot.transform.eulerAngles.x >= 25)
-                {
-                    Debug.Log("d");
-                    cameraPivot.transform.eulerAngles = new Vector3(24.9f, cameraPivot.transform.eulerAngles.y, cameraPivot.transform.eulerAngles.z);
-                }
-                else if (cameraPivot.transform.localEulerAngles.x > 300 && cameraPivot.transform.localEulerAngles.x <= 330)
-                {
-                    Debug.Log("x");
-
-                    cameraPivot.transform.eulerAngles = new Vector3(330.1f, cameraPivot.transform.eulerAngles.y, cameraPivot.transform.eulerAngles.z);
-                }
-
-            }
+            
         }
 
 
