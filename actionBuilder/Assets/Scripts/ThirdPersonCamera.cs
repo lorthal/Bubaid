@@ -8,9 +8,25 @@ public class ThirdPersonCamera : MonoBehaviour {
     private GameObject cameraPivot;
 
     public Transform a, b, c, d;
+    public GameObject player;
+    public GameObject playerGun;
 
     public float pitchMax = 80f;
     public float pitchMin = -80f;
+
+    public float smoothSpeed = 0.3f;
+
+    private Vector3 velocity;
+    private Vector3 targetPosition;
+
+    Ray cameraRay;
+    RaycastHit cameraHit;
+
+    void Awake()
+    {
+        targetPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z);
+        
+    }
 
     void Update ()
     {
@@ -19,7 +35,9 @@ public class ThirdPersonCamera : MonoBehaviour {
         {
             float x = 5 * Input.GetAxis("Mouse X");
             cameraPivot.transform.Rotate(0, x, 0, Space.World);
-            // m_Character.Move(new Vector3(0, x, 0), Input.GetKey(KeyCode.C), CrossPlatformInputManager.GetButtonDown("Jump"));
+            player.transform.Rotate(0, x, 0);
+
+            //m_Character.Move(new Vector3(0, x, 0), Input.GetKey(KeyCode.C), CrossPlatformInputManager.GetButtonDown("Jump"));
         }
         if (Input.GetAxis("Mouse Y") != 0)
         {
@@ -34,12 +52,33 @@ public class ThirdPersonCamera : MonoBehaviour {
                 cameraPivot.transform.Rotate(y, 0, 0, Space.Self);
             }
 
-            float difference = pitchMax - pitchMin;
-            angle -= pitchMin;
-            float progress = angle / difference;
+            //float difference = pitchMax - pitchMin;
+            //angle -= pitchMin;
+            //float progress = angle / difference;
 
-            transform.position = cameraPivot.transform.position + Bezier(a.localPosition, b.localPosition, c.localPosition, d.localPosition, progress);
+            //transform.position = cameraPivot.transform.position + Bezier(a.localPosition, b.localPosition, c.localPosition, d.localPosition, progress);
         }
+        
+        if(Input.GetKeyDown(KeyCode.H))
+        {
+            Vector3 side = transform.localPosition;
+            side.x = -side.x;
+            targetPosition = side;
+
+        }
+
+        Aim();
+        cameraRay = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+        if (Physics.Raycast(cameraRay, out cameraHit))
+        {
+            playerGun.transform.LookAt(cameraHit.point);
+        }
+        else
+        {
+            playerGun.transform.LookAt(cameraRay.origin + cameraRay.direction * 100);
+        }
+
+        transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, smoothSpeed * Time.deltaTime);
 
     }
 
@@ -53,5 +92,20 @@ public class ThirdPersonCamera : MonoBehaviour {
              + 3 * mtmt * t * b
              + 3 * mt * tt * c
              + tt * t * d;
+    }
+
+    void Aim()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            targetPosition = new Vector3(transform.localPosition.x, transform.localPosition.y-0.1f, -0.5f);
+
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            targetPosition = new Vector3(transform.localPosition.x, transform.localPosition.y + 0.1f, -1.5f);
+        }
+
+        
     }
 }
